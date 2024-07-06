@@ -42,13 +42,10 @@ class DecisionStump(BaseEstimator):
         """
         min_error= np.inf
         for j, sign in product(range(X.shape[1]), [-1, 1]):
-            # Find the best threshold for the given feature and sign
-            thr, thr_err = self._find_threshold(X[:, j], y, sign)
+            threshold, threshold_error = self._find_threshold(X[:, j], y, sign)
 
-            if thr_err < min_error:
-                # Update the best threshold, feature and sign
-                self.threshold_, self.j_, self.sign_, min_error = thr, j, sign, thr_err
-
+            if threshold_error < min_error:
+                self.threshold_, self.j_, self.sign_, min_error = threshold, j, sign, threshold_error
 
     def _predict(self, X: np.ndarray) -> np.ndarray:
         """
@@ -113,10 +110,8 @@ class DecisionStump(BaseEstimator):
         ids = np.argsort(values)
         values, labels = values[ids], labels[ids]
 
-        # Loss for classifying all as `sign` - namely, if threshold is smaller than values[0]
         loss = np.sum(np.abs(labels)[np.sign(labels) == sign])
 
-        # Loss of classifying threshold being each of the values given
         loss = np.append(loss, loss - np.cumsum(labels * sign))
 
         id = np.argmin(loss)

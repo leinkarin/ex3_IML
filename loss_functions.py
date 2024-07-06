@@ -18,14 +18,11 @@ def misclassification_error(y_true: np.ndarray, y_pred: np.ndarray, normalize: b
     -------
     Misclassification of given predictions
     """
-    # Calculate the number of misclassified samples
     misclassified = np.sum(y_true != y_pred)
 
     if normalize:
-        # Normalize by the number of samples
         return misclassified / len(y_true)
     else:
-        # Return the count of misclassified samples
         return misclassified
 
 
